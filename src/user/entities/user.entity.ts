@@ -21,7 +21,10 @@ export class User {
 
   @Column({ length: 60 })
   password: string;
-
+  
+  @Column({ length: 60 })
+  phone: string;
+  
   @Column()
   avatar: string;
 

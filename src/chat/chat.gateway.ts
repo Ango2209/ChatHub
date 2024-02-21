@@ -26,7 +26,7 @@ const options = {
 }
 @UsePipes(new ValidationPipe())
 @WebSocketGateway(options)
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class ChatGateway {
   @WebSocketServer()
   server;
 
@@ -38,29 +38,29 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly roomService: RoomService,
   ) {}
 
-  async handleConnection(client: Socket): Promise<void> {
-    const token = client.handshake.query.token.toString();
-    const payload = this.authService.verifyAccessToken(token);
+  // async handleConnection(client: Socket): Promise<void> {
+  //   const token = client.handshake.query.token.toString();
+  //   const payload = this.authService.verifyAccessToken(token);
 
-    const user = payload && (await this.userService.findOne(payload.id));
-    const room = user?.room;
+  //   const user = payload && (await this.userService.findOne(payload.id));
+  //   const room = user?.room;
 
-    if (!user) {
-      client.disconnect(true);
+  //   if (!user) {
+  //     client.disconnect(true);
 
-      return;
-    }
+  //     return;
+  //   }
 
-    this.connectedUsers.set(client.id, user.id);
+  //   this.connectedUsers.set(client.id, user.id);
 
-    if (room) {
-      return this.onRoomJoin(client, { roomId: room.id });
-    }
-  }
+  //   if (room) {
+  //     return this.onRoomJoin(client, { roomId: room.id });
+  //   }
+  // }
 
-  async handleDisconnect(client: Socket) {
-    this.connectedUsers.delete(client.id);
-  }
+  // async handleDisconnect(client: Socket) {
+  //   this.connectedUsers.delete(client.id);
+  // }
 
   @SubscribeMessage('message')
   async onMessage(client: Socket, addMessageDto: AddMessageDto) {

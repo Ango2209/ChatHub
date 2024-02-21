@@ -8,6 +8,9 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsString()
+  readonly phone: string;
+
+  @IsString()
   readonly avatar: string;
 
   @IsBoolean()
