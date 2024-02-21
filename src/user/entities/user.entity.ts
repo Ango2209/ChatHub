@@ -24,7 +24,13 @@ export class User {
   
   @Column({ length: 60 })
   phone: string;
-  
+
+  @Column({ length: 20})
+  fullName:string
+
+  @Column()
+  age:number
+
   @Column()
   avatar: string;
 
