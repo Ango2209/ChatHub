@@ -18,6 +18,9 @@ export class Message {
   @Column({ length: 250 })
   text: string;
 
+  @Column()
+  recipientId: string
+
   @CreateDateColumn()
   created_at: Date;
 

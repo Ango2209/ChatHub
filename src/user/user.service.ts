@@ -89,4 +89,13 @@ export class UserService {
 
     return this.userRepository.remove(user);
   }
+
+  async getUserForSidebar(userId: string) {
+    
+  return this.userRepository
+    .createQueryBuilder('user')
+    .select(['user.id', 'user.username', 'user.avatar'])
+    .where('user.id != :id', { id: userId })
+    .getMany();
+}
 }

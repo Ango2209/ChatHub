@@ -50,14 +50,15 @@ export class AuthController {
     @Body() userDto: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const tokens = await this.authService.signIn(userDto);
+    const result = await this.authService.signIn(userDto);
 
-    res.cookie('refreshToken', tokens.refreshToken, {
+    res.cookie('refreshToken', result.tokens.refreshToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    return tokens;
+    return result;
+
   }
 
   @Post('/update')

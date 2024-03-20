@@ -43,12 +43,12 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user.id);
 
-    return tokens;
+    return {user, tokens};
   }
 
   async validateUser(userDto: LoginUserDto): Promise<User> {
+    
     const user = await this.userService.findOneByUsername(userDto.username);
-
     if (!user) {
       throw new NotFoundException(`There is no user under this username`);
     }
@@ -57,7 +57,6 @@ export class AuthService {
       userDto.password,
       user.password,
     );
-
     if (passwordEquals) return user;
 
     throw new UnauthorizedException({ message: 'Incorrect password' });

@@ -11,4 +11,6 @@ export class AddMessageDto {
   @IsOptional()
   @IsUUID()
   userId?: string;
+  @IsUUID()
+  recipientId: string; // ID của người nhận tin nhắn
 }

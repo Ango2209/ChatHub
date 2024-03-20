@@ -10,13 +10,15 @@ import {
 import { Socket } from 'socket.io';
 
 import { UserService } from 'src/user/user.service';
-import { AuthService } from 'src/auth/auth.service';
 import { RoomService } from 'src/room/room.service';
 import { AddMessageDto } from './dto/add-message.dto';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { LeaveRoomDto } from './dto/leave-room.dto';
 import { KickUserDto } from './dto/kick-user.dto';
 import { BanUserDto } from './dto/ban-user.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { MessageService } from './chat.service';
+import { log } from 'console';
 const options = {
   cors: {
     origin: ["http://localhost:3001"],
@@ -36,6 +38,8 @@ export class ChatGateway {
     private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly roomService: RoomService,
+    private readonly messageService: MessageService,
+
   ) {}
 
   // async handleConnection(client: Socket): Promise<void> {
@@ -62,22 +66,37 @@ export class ChatGateway {
   //   this.connectedUsers.delete(client.id);
   // }
 
+  // @SubscribeMessage('message')
+  // async onMessage(client: Socket, addMessageDto: AddMessageDto) {
+  //   const userId = this.connectedUsers.get(client.id);
+  //   const user = await this.userService.findOne(userId);
+
+  //   if (!user.room) {
+  //     return;
+  //   }
+
+  //   addMessageDto.userId = userId;
+  //   addMessageDto.roomId = user.room.id;
+
+  //   await this.roomService.addMessage(addMessageDto);
+
+  //   client.to(user.room.id).emit('message', addMessageDto.text);
+  // }
+//   @SubscribeMessage('connection')
+// handleConnection(client: Socket, ...args: any[]) {
+//   this.connectedUsers.set(client.id, userId); // replace `userId` with the actual user ID
+// }
   @SubscribeMessage('message')
-  async onMessage(client: Socket, addMessageDto: AddMessageDto) {
-    const userId = this.connectedUsers.get(client.id);
-    const user = await this.userService.findOne(userId);
+async onMessage(client: Socket, addMessageDto: AddMessageDto) {
+  console.log('Received message with user ID:', addMessageDto.userId)
+  // const userId = this.connectedUsers.get(client.id);
+  addMessageDto.userId = addMessageDto.userId;//
 
-    if (!user.room) {
-      return;
-    }
+  await this.messageService.addMessage(addMessageDto);
+  console.log(addMessageDto, 'addMessageDto')
 
-    addMessageDto.userId = userId;
-    addMessageDto.roomId = user.room.id;
-
-    await this.roomService.addMessage(addMessageDto);
-
-    client.to(user.room.id).emit('message', addMessageDto.text);
-  }
+  client.to(addMessageDto.recipientId).emit('message', addMessageDto.text); // Gửi tin nhắn đến recipientId thay vì roomId
+}
 
   @SubscribeMessage('join')
   async onRoomJoin(client: Socket, joinRoomDto: JoinRoomDto) {
