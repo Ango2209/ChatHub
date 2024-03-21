@@ -109,4 +109,14 @@ export class AuthService {
 
     return tokens;
   }
+  async refreshToken(refreshToken: string) {
+    try {
+        const payload = this.jwtService.verify(refreshToken, { secret: process.env.JWT_REFRESH_SECRET }); // Cung cấp secret key
+        const newAccessToken = this.jwtService.sign({ id: payload.id }, { secret: process.env.JWT_ACCESS_SECRET, expiresIn: process.env.JWT_ACCESS_EXPIRE }); // Cung cấp secret key và thời gian hết hạn
+        return newAccessToken;
+    } catch (error) {
+        console.log("Error in refreshToken: ", error.message);
+        throw new UnauthorizedException('Invalid refresh token');
+    }
+}
 }
