@@ -82,6 +82,7 @@ export class ChatGateway {
   //   client.to(user.room.id).emit('message', addMessageDto.text);
   // }
 
+
   async handleConnection(client: Socket) {
     const token = client.handshake.query.token + '';
     const payload = this.authService.verifyAccessToken(token);
@@ -93,6 +94,7 @@ export class ChatGateway {
     }
   }
 
+
   @SubscribeMessage('message')
   async onMessage(client: Socket, addMessageDto: AddMessageDto) {
     console.log('Received message with user ID:', addMessageDto.userId);
@@ -102,9 +104,11 @@ export class ChatGateway {
     await this.messageService.addMessage(addMessageDto);
     console.log(addMessageDto, 'addMessageDto');
 
+
     const clientId = this.connectedUsers.get(addMessageDto.recipientId);
 
     client.to(clientId).emit('message', addMessageDto); // Gửi tin nhắn đến recipientId thay vì roomId
+
   }
 
   @SubscribeMessage('join')
