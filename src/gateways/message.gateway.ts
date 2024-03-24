@@ -11,12 +11,11 @@ import { Server } from 'ws';
 import { Logger } from '@nestjs/common';
 const options = {
   cors: {
-    origin: ["http://localhost:3001"],
-    methods: ["GET", "POST"],
+    origin: ['http://localhost:3001', 'http://localhost:3002'],
+    methods: ['GET', 'POST'],
     credentials: true,
-    
-  }
-}
+  },
+};
 @WebSocketGateway(options)
 export class MessageGateway implements OnGatewayInit, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
