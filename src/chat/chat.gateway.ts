@@ -88,7 +88,9 @@ export class ChatGateway {
 
     const user = payload && (await this.userService.findOne(payload.id));
 
-    this.connectedUsers.set(user.id, client.id); // replace `userId` with the actual user ID
+    if (user?.id && client?.id) {
+      this.connectedUsers.set(user.id, client.id); // replace `userId` with the actual user ID
+    }
   }
 
   @SubscribeMessage('message')
