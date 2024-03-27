@@ -11,7 +11,7 @@ import { Message } from 'src/room/entities/message.entity';
 import { MessageController } from './chat.controller';
 
 @Module({
-  controllers: [MessageController],
+  controllers: [MessageController,],
   imports: [UserModule, AuthModule, RoomModule,TypeOrmModule.forFeature([Message])],
   providers: [ChatGateway,MessageService],
 })

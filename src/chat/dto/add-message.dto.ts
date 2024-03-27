@@ -1,6 +1,7 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class AddMessageDto {
+  @IsOptional()
   @IsString()
   text: string;
 
@@ -17,4 +18,7 @@ export class AddMessageDto {
 
   @IsOptional()
   created_at: Date;
+
+  @IsOptional()
+  fileData: ArrayBuffer;
 }

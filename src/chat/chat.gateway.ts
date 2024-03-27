@@ -18,13 +18,14 @@ import { KickUserDto } from './dto/kick-user.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { MessageService } from './chat.service';
-import { log } from 'console';
+
 const options = {
   cors: {
     origin: ['http://localhost:3001', 'http://localhost:3002'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
+
 };
 @UsePipes(new ValidationPipe())
 @WebSocketGateway(options)
@@ -32,7 +33,7 @@ export class ChatGateway {
   @WebSocketServer()
   server;
 
-  connectedUsers: Map<string, string> = new Map();
+  public connectedUsers: Map<string, string> = new Map();
 
   constructor(
     private readonly userService: UserService,
@@ -97,9 +98,8 @@ export class ChatGateway {
 
   @SubscribeMessage('message')
   async onMessage(client: Socket, addMessageDto: AddMessageDto) {
+    
     console.log('Received message with user ID:', addMessageDto.userId);
-    // const userId = this.connectedUsers.get(client.id);
-    addMessageDto.userId = addMessageDto.userId; //
 
     await this.messageService.addMessage(addMessageDto);
     console.log(addMessageDto, 'addMessageDto');
